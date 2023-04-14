@@ -17,19 +17,35 @@ public class SudokuSolver implements ISudokuSolver {
 
 	public void setup(int size1) {
 		size = size1;
+		System.out.println(size1);
 		puzzle = new int[size*size][size*size];
-		D = new ArrayList<ArrayList<Integer>>(size*size*size*size);
+		D = new ArrayList<ArrayList<Integer>>();
+		for (int j = 0; j < size*size;j++){
+			System.out.println("WOWOWOWOWOW");
+			ArrayList<Integer> tempList = new ArrayList<>();
+			D.add(tempList);
+		}
+	
 
-		int[][] basePuzzle = new int[size*size][size*size];
-		for (int i = 0; i<9; i++){
-			for(int j = 0; j<9; j++){
+		for (ArrayList<Integer> i : D){
+
+			for (int j = 0; j < size*size;j++){
+				System.out.println("WOWOWOWOWOW");
+				i.add(0);
+			}
+
+			System.out.println("owo" + i.size());
+		}
+		for (int i = 0; i<size*size; i++){
+			for(int j = 0; j<size*size; j++){
 				if (j == i){
-					basePuzzle[i][j] = j;
+					setValue(i, j, j+1);
+				} else {
+					setValue(i, j, 0);
 				}
 			}
 		}
 
-		readInPuzzle(basePuzzle);
 		
 		
 	}
@@ -40,11 +56,16 @@ public class SudokuSolver implements ISudokuSolver {
 		ArrayList<Integer> asn = GetAssignment(puzzle);
 		
 		//INITIAL_FC
-		INITIAL_FC(asn);
+		//INITIAL_FC(asn);
 		//FC
 		System.out.println("We start :3");
-		FC(asn);
-
+		
+		int[][] uwu = GetPuzzles(FC(asn));
+		for (int i = 0; i<size*size; i++){
+			for(int j = 0; j<size*size; j++){
+					setValue(i, j, uwu[i][j]);
+			}
+		}
 		return true;
 	}
 
@@ -56,7 +77,7 @@ public class SudokuSolver implements ISudokuSolver {
 		//---------------------------------------------------------------------------------
 		//YOUR TASK:  Implement FC(asn)
 		//---------------------------------------------------------------------------------
-		public ArrayList FC(ArrayList<Integer> asn) {
+		public ArrayList<Integer> FC(ArrayList<Integer> asn) {
 			
 			
 			Boolean fin = true;
@@ -76,12 +97,13 @@ public class SudokuSolver implements ISudokuSolver {
 				D_old.add(tempList);
 			}
 			
-
+			System.out.println("hahahahahaha");
 			for (int i = 0; i < asn.size(); i++){
+				System.out.println(asn.get(i)+"hihihihihiih");
 				if(asn.get(i) == 0){
 					X = asn.get(i);
+					System.out.println("huhuhuhuhuhu");
 					fin = false;
-					break;
 				}
 				
 				if (fin == true){
@@ -91,7 +113,7 @@ public class SudokuSolver implements ISudokuSolver {
 			}
 			
 			if(fin == false){
-				
+				System.out.println("hahahahahaha");
 				for (int i = 1; i<10; i++){
 	
 					if(AC_FC(X, i)){
@@ -193,13 +215,12 @@ public class SudokuSolver implements ISudokuSolver {
 		public boolean REVISE(int Xi, int Xj){
 			Integer zero = 0;
 			
-			assert(Xi >= 0 && Xj >=0);
-			assert(Xi < size*size*size*size && Xj <size*size*size*size);
-			assert(Xi != Xj);
+			if(Xi >= 0 && Xj >=0 && Xi < size*size*size*size && Xj <size*size*size*size && Xi != Xj){
 			
 			boolean DELETED = false;
 
-			
+			System.out.println(Xi);
+			System.out.println(Xj);
 			ArrayList<Integer> Di = D.get(Xi);
 			ArrayList<Integer> Dj = D.get(Xj);	
 			
@@ -230,7 +251,8 @@ public class SudokuSolver implements ISudokuSolver {
 			
 			return DELETED;
 		}
-				
+			return false;
+	}
 		
 
 		
@@ -329,12 +351,12 @@ public class SudokuSolver implements ISudokuSolver {
 			//Enforces consistency between unassigned variables and all 
 			//initially assigned values; 
 			for (int i=0; i<anAssignment.size(); i++){
-				Integer V = (Integer) anAssignment.get(i);
+				Integer V = anAssignment.get(i);
 				if (V != 0){
 					ArrayList<Integer> Q = GetRelevantVariables(i);
 					boolean consistent = true;
 					while (!Q.isEmpty() && consistent){
-						Integer Y = (Integer) Q.remove(0);
+						Integer Y = Q.remove(0);
 						if (REVISE(Y,i)) {
 							consistent = !D.get(Y).isEmpty();
 						}
@@ -399,8 +421,10 @@ public class SudokuSolver implements ISudokuSolver {
 					asn.add(GetVariable(i,j), p[i][j]);
 					if (p[i][j] != 0){
 							//restrict domain
-							D.get(GetVariable(i,j)).clear();
-							D.get(GetVariable(i,j)).add(p[i][j]);
+							System.out.println("Size +" + D.size());
+							System.out.println("Size +" + D.get(i).size());
+							//D.get(i).clear();
+							D.get(i).add(j, p[i][j]);
 						}
 				}
 			}
@@ -408,7 +432,7 @@ public class SudokuSolver implements ISudokuSolver {
 		}	
 		
 	
-		public int[][] GetPuzzle(ArrayList asn) {
+		public int[][] GetPuzzles(ArrayList<Integer> asn) {
 			int[][] p = new int[size*size][size*size];
 			for (int i=0; i<size*size; i++) {
 				for (int j=0; j<size*size; j++) {
@@ -424,9 +448,11 @@ public class SudokuSolver implements ISudokuSolver {
 		//Utility functions
 		//-------------------------------------------------------------------
 		public int GetVariable(int i, int j){
-			assert(i<size*size && j<size*size);
-			assert(i>=0 && j>=0);		
-			return (i*size*size + j);	
+			if (i<size*size && j<size*size && i>=0 && j>=0 && size*size < 10);
+			{	
+			System.out.println(i*size*size + j);
+			return (i*size*size + j);
+			}	
 		}	
 		
 		
