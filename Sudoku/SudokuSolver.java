@@ -6,7 +6,7 @@ public class SudokuSolver implements ISudokuSolver {
 	int[][] puzzle;
 	int size;
 	ArrayList<ArrayList<Integer>> D; //= new ArrayList<ArrayList<Integer>>();
-	
+	ArrayList<Integer> R;
 	public int[][] getPuzzle() {
 		return puzzle;
 	}
@@ -43,8 +43,64 @@ public class SudokuSolver implements ISudokuSolver {
 		//YOUR TASK:  Implement FC(asn)
 		//---------------------------------------------------------------------------------
 		public ArrayList FC(ArrayList<Integer> asn) {
+			
+			
+			Boolean fin = true;
+			int X = 0;
+
+			ArrayList<ArrayList<Integer>> D_old = new ArrayList<>();
+
+			for (ArrayList<Integer> Rows : D){
+				
+				ArrayList<Integer> tempList = new ArrayList<>(); 
+				
+				for (int i : Rows){
+					int tempI = i;
+					tempList.add(tempI);
+				}
+
+				D_old.add(tempList);
+			}
+			
+
+			for (int i = 0; i < asn.size(); i++){
+				if(asn.get(i) == 0){
+					X = asn.get(i);
+					fin = false;
+					break;
+				}
+				
+				if (fin == true){
+					return asn;
+				}
+				
+			}
+			
+			if(fin == false){
+				
+				for (int i = 1; i<10; i++){
 	
-			return null;//failure
+					if(AC_FC(X, i)){
+					
+						asn.add(X, i);
+						R = FC(asn);
+					
+
+					if(R.size() != 9999){
+						return R;
+					}
+					
+					asn.add(X, 0);
+					D = D_old;
+					}else{
+					D = D_old;
+					}
+				}
+		
+			}
+
+			ArrayList<Integer> fail = new ArrayList<>(9999);
+			return fail; //failure
 		}
 
 	
