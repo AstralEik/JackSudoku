@@ -19,7 +19,17 @@ public class SudokuSolver implements ISudokuSolver {
 		size = size1;
 		puzzle = new int[size*size][size*size];
 		D = new ArrayList<ArrayList<Integer>>(size*size*size*size);
-		
+
+		int[][] basePuzzle = new int[size*size][size*size];
+		for (int i = 0; i<9; i++){
+			for(int j = 0; j<9; j++){
+				if (j == i){
+					basePuzzle[i][j] = j;
+				}
+			}
+		}
+
+		readInPuzzle(basePuzzle);
 		
 		
 	}
